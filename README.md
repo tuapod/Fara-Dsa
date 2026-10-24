@@ -2,7 +2,7 @@
 
 <div align="center">
 
-  <img src="images/icon.png" alt="Fara DSA Logo" width="96" height="96" />
+  <img src="electron/images/icon.png" alt="Fara DSA Logo" width="96" height="96" />
 
   ### Autonomous AI Coding Agent & Desktop Workspace Powered by DeepSeek
   **No API key required — Seamless browser automation via Playwright**
