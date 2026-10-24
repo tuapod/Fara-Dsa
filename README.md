@@ -33,7 +33,7 @@ The application comes with:
 
 The desktop application provides a clean, dark-mode workspace inspired by modern developer environments:
 
-![Fara DSA Screenshot](images/preview.png)
+![Fara DSA Screenshot](electron/images/preview.png)
 
 - **Landing Screen**: Select a workspace directory and dispatch tasks.
 - **Dynamic Task Classification**: The agent first categorizes the task (Web vs. Non-Web) and dynamically configures the layout.
