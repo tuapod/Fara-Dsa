@@ -1,0 +1,40 @@
+{
+  "name": "fara-dsa",
+  "version": "1.0.0",
+  "description": "Fara DSA - AI Coding Agent via Browser Automation",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "cli": "node src/index.js",
+    "postinstall": "node src/postinstall.js",
+    "build:win": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.faradsa.app",
+    "productName": "Fara DSA",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "src/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  },
+  "dependencies": {
+    "playwright": "^1.45.0"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^24.13.3"
+  }
+}

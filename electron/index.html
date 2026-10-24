@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fara DSA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="loading-screen">
+    <div class="loader-content">
+      <div class="spinner"></div>
+      <h2>Fara DSA</h2>
+      <p id="loading-status">در حال راه‌اندازی سیستم...</p>
+      
+      <!-- Progress Bar Elements -->
+      <div id="progress-container" class="hidden">
+        <div class="progress-bar-bg">
+          <div id="progress-bar-fill"></div>
+        </div>
+        <p id="progress-text"></p>
+      </div>
+      
+    </div>
+  </div>
+
+  <div class="app">
+    
+    <!-- Top Navigation -->
+    <header class="top-bar">
+      <div class="topbar-left">
+        <div class="logo">
+          <img src="images/icon.png" alt="Icon" class="icon">
+          <span>Fara</span>
+        </div>
+        <button id="btn-empty-history" class="history-btn hidden" title="Session History">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </button>
+      </div>
+      <div class="topbar-right">
+        <div class="window-controls">
+          <button class="win-btn" onclick="window.api?.minimize()">─</button>
+          <button class="win-btn" onclick="window.api?.maximize()">□</button>
+          <button class="win-btn close" onclick="window.api?.close()">✕</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- History Sidebar -->
+    <div id="history-sidebar" class="history-sidebar">
+      <div class="history-inner">
+        <div class="history-header">
+          <div class="history-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Sessions</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button id="btn-new-chat-sidebar" class="icon-btn" title="New Chat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            </button>
+            <button id="btn-close-history" class="icon-btn">✕</button>
+          </div>
+        </div>
+        <div class="history-search-wrapper">
+          <input type="text" id="history-search" placeholder="Search sessions..." />
+        </div>
+        <div id="history-list" class="history-list"></div>
+      </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <main class="app-frame">
+      
+      <!-- State 1: Empty State -->
+      <div id="empty-state" class="empty-state">
+        <div class="welcome-hero">
+          <h1>Where would you like to begin?</h1>
+        </div>
+        <form class="composer large-composer" id="empty-composer">
+          <textarea id="empty-input" rows="1" placeholder="Send a Message" aria-label="Send a Message"></textarea>
+          <div class="composer-toolbar">
+            <button type="button" id="btn-select-folder" class="round-button add-button" title="Choose Folder">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:16px;height:16px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            </button>
+            <span id="current-folder" style="font-size:12px;color:var(--muted);margin-left:8px;">No project selected</span>
+            <div class="toolbar-spacer"></div>
+            <button id="btn-empty-send" class="send-button" type="submit" aria-label="Send message">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/></svg>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- State 2: Active Workspace -->
+      <section id="active-state" class="workspace hidden">
+        
+        <!-- Chat Panel -->
+        <aside class="chat-panel">
+          <div class="chat-scroll" id="chat-container"></div>
+
+          <form class="composer" id="chat-composer">
+            <textarea id="chat-input" rows="1" placeholder="Send a Message" aria-label="Send a Message"></textarea>
+            <div class="composer-toolbar">
+              <div class="toolbar-spacer"></div>
+              
+              <button id="btn-chat-send" class="send-button" type="submit" aria-label="Send message">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6.5 10.5 12 5l5.5 5.5"/></svg>
+              </button>
+              <button id="btn-chat-stop" class="send-button stop-btn hidden" type="button" aria-label="Stop">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" stroke="none"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+              </button>
+            </div>
+          </form>
+        </aside>
+
+        <div class="splitter" id="main-splitter" aria-hidden="true"></div>
+
+        <!-- Files & Editor Panel -->
+        <section class="files-panel" aria-label="File workspace">
+          <div class="editor-window">
+            <div class="editor-toolbar">
+              <div class="view-toggle" aria-label="Editor view">
+                <button class="view-button active" type="button" id="btn-view-code" aria-label="Code view">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg>
+                </button>
+                <button class="view-button eye-button" type="button" id="btn-view-preview" aria-label="Preview view">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></svg>
+                </button>
+              </div>
+              <button id="btn-active-history" class="history-button" type="button" aria-label="History" style="display: none;">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg>
+              </button>
+            </div>
+
+            <div class="editor-body">
+              <!-- File Tree -->
+              <nav id="file-tree" class="file-tree" aria-label="File explorer"></nav>
+              
+              <div class="tree-resize-grip" id="tree-resizer" aria-hidden="true"><span></span></div>
+              
+              <!-- Editor Content -->
+              <div class="editor-container">
+                <div class="editor-tabs hidden" id="editor-tab-bar">
+                  <div class="tab active" id="editor-tab-name">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                    No file open
+                  </div>
+                </div>
+                <div class="editor-content hidden" id="editor-content-area">
+                  <div class="gutter" id="line-numbers"></div>
+                  <pre><code id="code-content" class="hljs"></code></pre>
+                </div>
+                <div class="empty-editor" id="empty-editor">
+                  <span>No content</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>
